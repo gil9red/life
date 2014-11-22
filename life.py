@@ -108,7 +108,7 @@ def check_neighbors(field_arr, row, col):
 
 for j in range(field_height):
     for i in range(field_width):
-        if randrange(5) == 0:  # 20% chance
+        if randrange(10) == 0:  # 10% chance
             field[j][i] = True
 
 
@@ -163,7 +163,10 @@ def draw_rect(x, y, w, h):
 def draw():  # draw is called all the time
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)  # clear the screen
     glLoadIdentity()  # reset position
+
     refresh2d_custom(width, height, field_width, field_height)
+
+    glColor3f(0.0, 0.0, 0.0)  # black
 
     for j in range(field_height):
         for i in range(field_width):
@@ -198,7 +201,6 @@ def keyboard(*args):
 # TODO: расстановка на поле кликом мышки
 # TODO: настройка интервала
 # TODO: возможность остановки таймера и ручного перехода к следующему поколению
-# TODO: инвентирование цветов: поле -- белый цвет, клетки -- черный
 # TODO: клетки показывать с рамкой
 # TODO: переименовать check_neighbors на что-то связанное с "новым поколением"
 
@@ -209,6 +211,7 @@ if __name__ == '__main__':
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH)
     glutInitWindowSize(width, height)  # set window size
     glutCreateWindow(b"Life 1970")  # create window with title
+    glClearColor(1, 1, 1, 1)  # background color
     glutDisplayFunc(draw)  # set draw function callback
     glutIdleFunc(draw)  # draw all the time
     glutKeyboardFunc(keyboard)  # tell opengl that we want to check keys
