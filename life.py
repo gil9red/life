@@ -211,7 +211,7 @@ def keyboard(*args):
 
     # Нажатие на enter
     elif key == b'\r':
-        # Пошаговый переход к следующему поколению возможен только во время паузы
+        # Пошаговый переход к следующему поколению (можно только во время паузы)
         if not running_timer:
             running_timer = True
             next_generation()
