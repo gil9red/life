@@ -89,7 +89,7 @@ def check_neighbors(field_arr, row, col):
     count = count_neighbors(field_arr, row, col)
 
     # Правила жизни клеток:
-    #   * в пустой (мёртвой) клетке, рядом с которой ровно три живые клетки, зарождается жизнь;
+    # * в пустой (мёртвой) клетке, рядом с которой ровно три живые клетки, зарождается жизнь;
     #   * если у живой клетки есть две или три живые соседки, то эта клетка продолжает жить;
     #   * если соседей меньше двух или больше трёх) клетка умирает («от одиночества» или
     #     «от перенаселённости»).
@@ -112,10 +112,6 @@ def random_fill_field():
     # Заполнение поля игры случайными клетками
     for j in range(field_height):
         for i in range(field_width):
-            # Очищаем клетку
-            field[j][i] = False
-
-            # И, если повезет, заполняем
             if randrange(10) == 0:  # 10% chance
                 field[j][i] = True
 
@@ -141,6 +137,26 @@ def next_generation():
         global count_generation
         count_generation += 1
         update_window_title()
+
+
+def new_game():
+    global field_height
+    global field_width
+    global field
+
+    # Заполнение поля игры случайными клетками
+    for j in range(field_height):
+        for i in range(field_width):
+            # Очищаем клетку
+            field[j][i] = False
+
+    global running_timer
+    global count_generation
+
+    running_timer = False
+    count_generation = 1
+
+    update_window_title()
 
 
 def refresh2d_custom(w, h, i_w, i_h):
@@ -204,14 +220,14 @@ def keyboard(*args):
 
     # Нажатие на кнопку R  в верхнем и нижнем регистре
     elif key == b'r' or key == b'R':
-        # TODO: сделать что-то вроде функции "Новая игра"
-        global count_generation
-        count_generation = 1
-        running_timer = False
-
+        new_game()
         random_fill_field()
         draw()
-        update_window_title()
+
+    # Нажатие на кнопку N  в верхнем и нижнем регистре
+    elif key == b'n' or key == b'N':
+        new_game()
+        draw()
 
 
 def mouse_event(button, state, x, y):
@@ -234,6 +250,7 @@ def mouse_event(button, state, x, y):
 # TODO: настройка интервала
 # TODO: клетки показывать с рамкой
 # TODO: если все клетки мертвы заканчивать игру
+
 
 if __name__ == '__main__':
     # initialization
