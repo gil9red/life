@@ -45,7 +45,7 @@ __author__ = 'ipetrash'
 width, height = 400, 400  # window size
 field_width, field_height = 80, 80  # internal resolution
 interval = 333  # update interval in milliseconds
-timer = False
+running_timer = False
 
 count_generation = 1
 
@@ -143,13 +143,17 @@ def check_neighbors(field_arr, row, col):
 def update_window_title():
     global window_title
     global count_generation
-    glutSetWindowTitle('Life 1970. Generation: {}'.format(count_generation).encode())
+    global running_timer
+
+    window_title = 'Life 1970. Timer: {}. Generation: {}.'
+    glutSetWindowTitle(window_title.format('running' if running_timer else 'stopped',
+                                           count_generation).encode())
 
 
 def next_generation():
-    global timer
+    global running_timer
 
-    if timer:
+    if running_timer:
         for j in range(field_height):
             for i in range(field_width):
                 check_neighbors(field, j, i)
@@ -200,20 +204,21 @@ def update(value):
 
 
 def keyboard(*args):
-    global timer
+    global running_timer
 
     key = args[0]
 
     # Нажатие на пробел
     if key == b' ':
-        timer = not timer
+        running_timer = not running_timer
+        update_window_title()
 
     elif key == b'\r':
         # Пошаговый переход к следующему поколению возможен только во время паузы
-        if not timer:
-            timer = True
+        if not running_timer:
+            running_timer = True
             next_generation()
-            timer = False
+            running_timer = False
             draw()
 
 
