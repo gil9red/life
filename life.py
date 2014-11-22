@@ -43,11 +43,11 @@ from OpenGL.GLUT import *
 __author__ = 'ipetrash'
 
 width, height = 400, 400  # window size
-field_width, field_height = 70, 70  # internal resolution
+field_width, field_height = 80, 80  # internal resolution
 interval = 333  # update interval in milliseconds
 timer = False
 
-count_generation = 0
+count_generation = 1
 
 # Поле игры
 field = [[False for x in range(field_width)]
@@ -140,16 +140,23 @@ def check_neighbors(field_arr, row, col):
 # #
 
 
+def update_window_title():
+    global window_title
+    global count_generation
+    glutSetWindowTitle('Life 1970. Generation: {}'.format(count_generation).encode())
+
+
 def next_generation():
     global timer
 
     if timer:
-        global count_generation
-        count_generation += 1
-
         for j in range(field_height):
             for i in range(field_width):
                 check_neighbors(field, j, i)
+
+        global count_generation
+        count_generation += 1
+        update_window_title()
 
 
 def refresh2d_custom(w, h, i_w, i_h):
@@ -214,7 +221,6 @@ def keyboard(*args):
 # TODO: расстановка на поле кликом мышки
 # TODO: настройка интервала
 # TODO: клетки показывать с рамкой
-# TODO: показывать номер поколения
 
 
 if __name__ == '__main__':
@@ -222,7 +228,8 @@ if __name__ == '__main__':
     glutInit()  # initialize glut
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH)
     glutInitWindowSize(width, height)  # set window size
-    glutCreateWindow(b"Life 1970")  # create window with title
+    glutCreateWindow(b'')  # create window
+    update_window_title()
     glClearColor(1, 1, 1, 1)  # background color
     glutDisplayFunc(draw)  # set draw function callback
     glutIdleFunc(draw)  # draw all the time
