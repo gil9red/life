@@ -43,8 +43,9 @@ from OpenGL.GLUT import *
 __author__ = 'ipetrash'
 
 width, height = 400, 400  # window size
-field_width, field_height = 100, 100  # internal resolution
-interval = 300  # update interval in milliseconds
+field_width, field_height = 70, 70  # internal resolution
+interval = 333  # update interval in milliseconds
+timer = True
 
 
 field = []
@@ -105,23 +106,23 @@ def check_neighbors(field_arr, row, col):
         field_arr[row][col] = 0
 
 
-# for j in range(field_height):
-#     for i in range(field_width):
-#         if randrange(5) == 0:  # 20% chance
-#             field[j][i] = 1
+for j in range(field_height):
+    for i in range(field_width):
+        if randrange(5) == 0:  # 20% chance
+            field[j][i] = 1
 
 
-# Интересная фигура:
-#      *
-#    * *
-#  * *
-#
-field[20][20+1] = 1
-field[20-1][20] = 1
-field[20][20] = 1
-field[20-1][20-1] = 1
-field[20+1][20+1] = 1
-#
+# # Интересная фигура:
+# #      *
+# #    * *
+# #  * *
+# #
+# field[20][20+1] = 1
+# field[20-1][20] = 1
+# field[20][20] = 1
+# field[20-1][20-1] = 1
+# field[20+1][20+1] = 1
+# #
 
 # # Интересная фигура:
 # #     * *
@@ -185,11 +186,22 @@ def draw():  # draw is called all the time
 
 
 def update(value):
-    for j in range(field_height):
-        for i in range(field_width):
-            check_neighbors(field, j, i)
+    global timer
+
+    if timer:
+        for j in range(field_height):
+            for i in range(field_width):
+                check_neighbors(field, j, i)
 
     glutTimerFunc(interval, update, 0)  # trigger next update
+
+
+def keyboard(*args):
+    global timer
+
+    key = args[0]
+    if key == b' ':
+        timer = False if timer else True
 
 
 # TODO: проверить работу алгоритма
@@ -209,5 +221,6 @@ if __name__ == '__main__':
     glutCreateWindow(b"Life 1970")  # create window with title
     glutDisplayFunc(draw)  # set draw function callback
     glutIdleFunc(draw)  # draw all the time
+    glutKeyboardFunc(keyboard)  # tell opengl that we want to check keys
     glutTimerFunc(interval, update, 0)  # trigger next update
     glutMainLoop()  # start everything
