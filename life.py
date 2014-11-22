@@ -1,7 +1,7 @@
 __author__ = 'ipetrash'
 
 
-## Conway's Game of Life (1970).
+# # Conway's Game of Life (1970).
 # Место действия этой игры — «вселенная» — это размеченная на клетки
 # поверхность или плоскость — безграничная, ограниченная, или замкнутая
 # (в пределе — бесконечная плоскость).
@@ -47,40 +47,36 @@ field_width, field_height = 70, 70  # internal resolution
 interval = 333  # update interval in milliseconds
 timer = False
 
-
-field = []
-for j in range(field_height):
-    field.append([])
-
-    for i in range(field_width):
-        field[j].append(False)
+# Поле игры
+field = [[False for x in range(field_width)]
+         for x in range(field_height)]
 
 
 def count_neighbors(field_arr, row, col):
     count = 0
 
-    if col-1 >= 0 and field_arr[row][col-1]:
+    if col - 1 >= 0 and field_arr[row][col - 1]:
         count += 1
 
-    if row-1 >= 0 and col-1 >= 0 and field_arr[row-1][col-1]:
+    if row - 1 >= 0 and col - 1 >= 0 and field_arr[row - 1][col - 1]:
         count += 1
 
-    if row-1 >= 0 and field_arr[row-1][col]:
+    if row - 1 >= 0 and field_arr[row - 1][col]:
         count += 1
 
-    if row-1 >= 0 and col+1 < field_width and field_arr[row-1][col+1]:
+    if row - 1 >= 0 and col + 1 < field_width and field_arr[row - 1][col + 1]:
         count += 1
 
-    if col+1 < field_width and field_arr[row][col+1]:
+    if col + 1 < field_width and field_arr[row][col + 1]:
         count += 1
 
-    if row+1 < field_height and col+1 < field_width and field_arr[row+1][col+1]:
+    if row + 1 < field_height and col + 1 < field_width and field_arr[row + 1][col + 1]:
         count += 1
 
-    if row+1 < field_height and field_arr[row+1][col]:
+    if row + 1 < field_height and field_arr[row + 1][col]:
         count += 1
 
-    if row+1 < field_height and col-1 >= 0 and field_arr[row+1][col-1]:
+    if row + 1 < field_height and col - 1 >= 0 and field_arr[row + 1][col - 1]:
         count += 1
 
     return count
@@ -200,7 +196,7 @@ def keyboard(*args):
 # TODO: проверить работу алгоритма
 # TODO: расстановка на поле кликом мышки
 # TODO: настройка интервала
-# TODO: возможность остановки таймера и ручного перехода к следующему поколению
+# TODO: возможность ручного перехода к следующему поколению
 # TODO: клетки показывать с рамкой
 # TODO: переименовать check_neighbors на что-то связанное с "новым поколением"
 
