@@ -47,9 +47,17 @@ field_width, field_height = 70, 70  # internal resolution
 interval = 333  # update interval in milliseconds
 timer = False
 
+count_generation = 0
+
 # Поле игры
 field = [[False for x in range(field_width)]
          for x in range(field_height)]
+
+# Заполнение поля игры случайными клетками
+for j in range(field_height):
+    for i in range(field_width):
+        if randrange(10) == 0:  # 10% chance
+            field[j][i] = True
 
 
 def count_neighbors(field_arr, row, col):
@@ -102,12 +110,6 @@ def check_neighbors(field_arr, row, col):
         field_arr[row][col] = False
 
 
-for j in range(field_height):
-    for i in range(field_width):
-        if randrange(10) == 0:  # 10% chance
-            field[j][i] = True
-
-
 # # Интересная фигура:
 # #      *
 # #    * *
@@ -142,6 +144,9 @@ def next_generation():
     global timer
 
     if timer:
+        global count_generation
+        count_generation += 1
+
         for j in range(field_height):
             for i in range(field_width):
                 check_neighbors(field, j, i)
@@ -196,12 +201,20 @@ def keyboard(*args):
     if key == b' ':
         timer = not timer
 
+    elif key == b'\r':
+        # Пошаговый переход к следующему поколению возможен только во время паузы
+        if not timer:
+            timer = True
+            next_generation()
+            timer = False
+            draw()
+
 
 # TODO: проверить работу алгоритма
 # TODO: расстановка на поле кликом мышки
 # TODO: настройка интервала
-# TODO: возможность ручного перехода к следующему поколению
 # TODO: клетки показывать с рамкой
+# TODO: показывать номер поколения
 
 
 if __name__ == '__main__':
