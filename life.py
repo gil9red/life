@@ -45,7 +45,7 @@ __author__ = 'ipetrash'
 width, height = 400, 400  # window size
 field_width, field_height = 70, 70  # internal resolution
 interval = 333  # update interval in milliseconds
-timer = True
+timer = False
 
 
 field = []
@@ -53,7 +53,7 @@ for j in range(field_height):
     field.append([])
 
     for i in range(field_width):
-        field[j].append(0)
+        field[j].append(False)
 
 
 def count_neighbors(field_arr, row, col):
@@ -98,18 +98,18 @@ def check_neighbors(field_arr, row, col):
 
     # в пустой (мёртвой) клетке, рядом с которой ровно три живые клетки, зарождается жизнь;
     if not cell and count == 3:
-        field_arr[row][col] = 1
+        field_arr[row][col] = True
 
     # если соседей меньше двух или больше трёх) клетка умирает («от одиночества»
     # или «от перенаселённости»).
     elif cell and (count < 2 or count > 3):
-        field_arr[row][col] = 0
+        field_arr[row][col] = False
 
 
 for j in range(field_height):
     for i in range(field_width):
         if randrange(5) == 0:  # 20% chance
-            field[j][i] = 1
+            field[j][i] = True
 
 
 # # Интересная фигура:
@@ -117,11 +117,11 @@ for j in range(field_height):
 # #    * *
 # #  * *
 # #
-# field[20][20+1] = 1
-# field[20-1][20] = 1
-# field[20][20] = 1
-# field[20-1][20-1] = 1
-# field[20+1][20+1] = 1
+# field[20][20+1] = True
+# field[20-1][20] = True
+# field[20][20] = True
+# field[20-1][20-1] = True
+# field[20+1][20+1] = True
 # #
 
 # # Интересная фигура:
@@ -130,28 +130,16 @@ for j in range(field_height):
 # #  * *
 # #  * *
 # #
-# field[20][20] = 1
-# field[20][20+1] = 1
-# field[20+1][20] = 1
-# field[20+1][20+1] = 1
+# field[20][20] = True
+# field[20][20+1] = True
+# field[20+1][20] = True
+# field[20+1][20+1] = True
 #
-# field[20+2][20+2] = 1
-# field[20+2][20+1+2] = 1
-# field[20+1+2][20+2] = 1
-# field[20+1+2][20+1+2] = 1
+# field[20+2][20+2] = True
+# field[20+2][20+1+2] = True
+# field[20+1+2][20+2] = True
+# field[20+1+2][20+1+2] = True
 # #
-
-
-# for j in range(field_height):
-#     for i in range(field_width):
-#         print(str(field[j][i]) + ' ', end=' ')
-#     print()
-#
-#
-# for j in range(len(field)):
-#     for i in range(len(field[0])):
-#         print(str(field[j][i]) + ' ', end=' ')
-#     print()
 
 
 def refresh2d_custom(w, h, i_w, i_h):
@@ -200,8 +188,10 @@ def keyboard(*args):
     global timer
 
     key = args[0]
+
+    # Нажатие на пробел
     if key == b' ':
-        timer = False if timer else True
+        timer = not timer
 
 
 # TODO: проверить работу алгоритма
