@@ -138,6 +138,15 @@ for j in range(field_height):
 # #
 
 
+def next_generation():
+    global timer
+
+    if timer:
+        for j in range(field_height):
+            for i in range(field_width):
+                check_neighbors(field, j, i)
+
+
 def refresh2d_custom(w, h, i_w, i_h):
     glViewport(0, 0, w, h)
     glMatrixMode(GL_PROJECTION)
@@ -173,12 +182,7 @@ def draw():  # draw is called all the time
 
 
 def update(value):
-    global timer
-
-    if timer:
-        for j in range(field_height):
-            for i in range(field_width):
-                check_neighbors(field, j, i)
+    next_generation()
 
     glutTimerFunc(interval, update, 0)  # trigger next update
 
@@ -198,7 +202,6 @@ def keyboard(*args):
 # TODO: настройка интервала
 # TODO: возможность ручного перехода к следующему поколению
 # TODO: клетки показывать с рамкой
-# TODO: переименовать check_neighbors на что-то связанное с "новым поколением"
 
 
 if __name__ == '__main__':
