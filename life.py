@@ -43,7 +43,7 @@ from OpenGL.GLUT import *
 __author__ = 'ipetrash'
 
 width, height = 400, 400  # window size
-field_width, field_height = 80, 80  # internal resolution
+field_width, field_height = 40, 40  # internal resolution
 interval = 333  # update interval in milliseconds
 running_timer = False
 
@@ -52,12 +52,6 @@ count_generation = 1
 # Поле игры
 field = [[False for x in range(field_width)]
          for x in range(field_height)]
-
-# Заполнение поля игры случайными клетками
-for j in range(field_height):
-    for i in range(field_width):
-        if randrange(10) == 0:  # 10% chance
-            field[j][i] = True
 
 
 def count_neighbors(field_arr, row, col):
@@ -110,34 +104,20 @@ def check_neighbors(field_arr, row, col):
         field_arr[row][col] = False
 
 
-# # Интересная фигура:
-# #      *
-# #    * *
-# #  * *
-# #
-# field[20][20+1] = True
-# field[20-1][20] = True
-# field[20][20] = True
-# field[20-1][20-1] = True
-# field[20+1][20+1] = True
-# #
+def random_fill_field():
+    global field_height
+    global field_width
+    global field
 
-# # Интересная фигура:
-# #     * *
-# #     * *
-# #  * *
-# #  * *
-# #
-# field[20][20] = True
-# field[20][20+1] = True
-# field[20+1][20] = True
-# field[20+1][20+1] = True
-#
-# field[20+2][20+2] = True
-# field[20+2][20+1+2] = True
-# field[20+1+2][20+2] = True
-# field[20+1+2][20+1+2] = True
-# #
+    # Заполнение поля игры случайными клетками
+    for j in range(field_height):
+        for i in range(field_width):
+            # Очищаем клетку
+            field[j][i] = False
+
+            # И, если повезет, заполняем
+            if randrange(10) == 0:  # 10% chance
+                field[j][i] = True
 
 
 def update_window_title():
@@ -213,6 +193,7 @@ def keyboard(*args):
         running_timer = not running_timer
         update_window_title()
 
+    # Нажатие на enter
     elif key == b'\r':
         # Пошаговый переход к следующему поколению возможен только во время паузы
         if not running_timer:
@@ -221,12 +202,38 @@ def keyboard(*args):
             running_timer = False
             draw()
 
+    # Нажатие на кнопку R  в верхнем и нижнем регистре
+    elif key == b'r' or key == b'R':
+        # TODO: сделать что-то вроде функции "Новая игра"
+        global count_generation
+        count_generation = 1
+        running_timer = False
+
+        random_fill_field()
+        draw()
+        update_window_title()
+
+
+def mouse_event(button, state, x, y):
+    if button == GLUT_LEFT_BUTTON and state == GLUT_UP:
+        global field_width
+        global field_height
+        global width
+        global height
+        global field
+
+        col = x // (width // field_width)
+        row = y // (height // field_height)
+        row = (field_height - 1) - row
+
+        field[row][col] = not field[row][col]
+        draw()
+
 
 # TODO: проверить работу алгоритма
-# TODO: расстановка на поле кликом мышки
 # TODO: настройка интервала
 # TODO: клетки показывать с рамкой
-
+# TODO: если все клетки мертвы заканчивать игру
 
 if __name__ == '__main__':
     # initialization
@@ -239,5 +246,6 @@ if __name__ == '__main__':
     glutDisplayFunc(draw)  # set draw function callback
     glutIdleFunc(draw)  # draw all the time
     glutKeyboardFunc(keyboard)  # tell opengl that we want to check keys
+    glutMouseFunc(mouse_event)  # tell opengl that we want to check mouse buttons
     glutTimerFunc(interval, update, 0)  # trigger next update
     glutMainLoop()  # start everything
