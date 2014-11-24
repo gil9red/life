@@ -230,20 +230,58 @@ def keyboard(*args):
         draw()
 
 
-def mouse_event(button, state, x, y):
-    if button == GLUT_LEFT_BUTTON and state == GLUT_UP:
-        global field_width
-        global field_height
-        global width
-        global height
-        global field
+left_mouse = False
+right_mouse = False
 
-        col = x // (width // field_width)
-        row = y // (height // field_height)
-        row = (field_height - 1) - row
+last_row = -1
+last_col = -1
 
-        field[row][col] = not field[row][col]
+
+def change_cell(x, y):
+    global field_width
+    global field_height
+    global width
+    global height
+    global field
+
+    col = x // (width // field_width)
+    row = y // (height // field_height)
+    row = (field_height - 1) - row
+
+    global last_row
+    global last_col
+
+    if last_row != row or last_col != col:
+        global left_mouse
+        global right_mouse
+
+        if left_mouse:
+            field[row][col] = True
+
+        elif right_mouse:
+            field[row][col] = False
+
         draw()
+
+        last_row = row
+        last_col = col
+
+
+def mouse_event(button, state, x, y):
+    global left_mouse
+    global right_mouse
+
+    if button == GLUT_LEFT_BUTTON:
+        left_mouse = state == GLUT_DOWN
+
+    elif button == GLUT_RIGHT_BUTTON:
+        right_mouse = state == GLUT_DOWN
+
+    change_cell(x, y)
+
+
+def mouse_move_event(x, y):
+    change_cell(x, y)
 
 
 # TODO: проверить работу алгоритма
@@ -265,5 +303,6 @@ if __name__ == '__main__':
     glutIdleFunc(draw)  # draw all the time
     glutKeyboardFunc(keyboard)  # tell opengl that we want to check keys
     glutMouseFunc(mouse_event)  # tell opengl that we want to check mouse buttons
+    glutMotionFunc(mouse_move_event)
     glutTimerFunc(interval, update, 0)  # trigger next update
     glutMainLoop()  # start everything
