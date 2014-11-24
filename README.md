@@ -26,6 +26,7 @@ RU: Простая реализация игры "Жизнь 1970".
 
 
 Screenshots:
+
 ![](https://raw.githubusercontent.com/gil9red/life/master/screenshot.png)
 
 
