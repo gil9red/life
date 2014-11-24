@@ -33,7 +33,6 @@ __author__ = 'ipetrash'
 # http://habrahabr.ru/company/mailru/blog/228379/
 
 
-
 from random import randrange
 
 from OpenGL.GL import *
@@ -48,82 +47,96 @@ interval = 333  # update interval in milliseconds
 running_timer = False
 
 count_generation = 1
+count_living_cells = 0
 
 # Поле игры
-field = [[False for x in range(field_width)]
-         for x in range(field_height)]
+field = [[False for col in range(field_width)]
+         for row in range(field_height)]
 
 
-def count_neighbors(field_arr, row, col):
+def count_neighbors(row, col):
+    global field
+
     count = 0
 
-    if col - 1 >= 0 and field_arr[row][col - 1]:
+    if col - 1 >= 0 and field[row][col - 1]:
         count += 1
 
-    if row - 1 >= 0 and col - 1 >= 0 and field_arr[row - 1][col - 1]:
+    if row - 1 >= 0 and col - 1 >= 0 and field[row - 1][col - 1]:
         count += 1
 
-    if row - 1 >= 0 and field_arr[row - 1][col]:
+    if row - 1 >= 0 and field[row - 1][col]:
         count += 1
 
-    if row - 1 >= 0 and col + 1 < field_width and field_arr[row - 1][col + 1]:
+    if row - 1 >= 0 and col + 1 < field_width and field[row - 1][col + 1]:
         count += 1
 
-    if col + 1 < field_width and field_arr[row][col + 1]:
+    if col + 1 < field_width and field[row][col + 1]:
         count += 1
 
-    if row + 1 < field_height and col + 1 < field_width and field_arr[row + 1][col + 1]:
+    if row + 1 < field_height and col + 1 < field_width and field[row + 1][col + 1]:
         count += 1
 
-    if row + 1 < field_height and field_arr[row + 1][col]:
+    if row + 1 < field_height and field[row + 1][col]:
         count += 1
 
-    if row + 1 < field_height and col - 1 >= 0 and field_arr[row + 1][col - 1]:
+    if row + 1 < field_height and col - 1 >= 0 and field[row + 1][col - 1]:
         count += 1
 
     return count
 
 
-def check_neighbors(field_arr, row, col):
-    cell = field_arr[row][col]
-    count = count_neighbors(field_arr, row, col)
+def check_neighbors(row, col):
+    global field
+    global count_living_cells
+
+    cell = field[row][col]
+    count = count_neighbors(row, col)
 
     # Правила жизни клеток:
     # * в пустой (мёртвой) клетке, рядом с которой ровно три живые клетки, зарождается жизнь;
-    #   * если у живой клетки есть две или три живые соседки, то эта клетка продолжает жить;
-    #   * если соседей меньше двух или больше трёх) клетка умирает («от одиночества» или
-    #     «от перенаселённости»).
+    # * если у живой клетки есть две или три живые соседки, то эта клетка продолжает жить;
+    # * если соседей меньше двух или больше трёх) клетка умирает («от одиночества» или
+    #   «от перенаселённости»).
 
     # в пустой (мёртвой) клетке, рядом с которой ровно три живые клетки, зарождается жизнь;
     if not cell and count == 3:
-        field_arr[row][col] = True
+        field[row][col] = True
+        count_living_cells += 1
 
     # если соседей меньше двух или больше трёх) клетка умирает («от одиночества»
     # или «от перенаселённости»).
     elif cell and (count < 2 or count > 3):
-        field_arr[row][col] = False
+        field[row][col] = False
+        count_living_cells -= 1
 
 
 def random_fill_field():
     global field_height
     global field_width
     global field
+    global count_living_cells
+
+    count_living_cells = 0
 
     # Заполнение поля игры случайными клетками
     for j in range(field_height):
         for i in range(field_width):
             if randrange(10) == 0:  # 10% chance
-                field[j][i] = True
+                if not field[j][i]:
+                    field[j][i] = True
+                    count_living_cells += 1
 
 
 def update_window_title():
     global window_title
-    global count_generation
     global running_timer
+    global count_generation
+    global count_living_cells
 
-    window_title = 'Life 1970. Timer: {}. Generation: {}.'
+    window_title = 'Life 1970. Timer: {}. Generation: {}. Living: {}.'
     glutSetWindowTitle(window_title.format('running' if running_timer else 'stopped',
-                                           count_generation).encode())
+                                           count_generation, count_living_cells).encode())
 
 
 def next_generation():
@@ -132,11 +145,16 @@ def next_generation():
     if running_timer:
         for j in range(field_height):
             for i in range(field_width):
-                check_neighbors(field, j, i)
+                check_neighbors(j, i)
 
         global count_generation
         count_generation += 1
         update_window_title()
+
+        global count_living_cells
+        if count_living_cells == 0:
+            print('Все клетки мертвы!')
+            new_game()
 
 
 def new_game():
@@ -152,9 +170,11 @@ def new_game():
 
     global running_timer
     global count_generation
+    global count_living_cells
 
     running_timer = False
     count_generation = 1
+    count_living_cells = 0
 
     update_window_title()
 
@@ -222,6 +242,7 @@ def keyboard(*args):
     elif key == b'r' or key == b'R':
         new_game()
         random_fill_field()
+        update_window_title()
         draw()
 
     # Нажатие на кнопку N  в верхнем и нижнем регистре
@@ -243,6 +264,7 @@ def change_cell(x, y):
     global width
     global height
     global field
+    global count_living_cells
 
     col = x // (width // field_width)
     row = y // (height // field_height)
@@ -255,16 +277,28 @@ def change_cell(x, y):
         global left_mouse
         global right_mouse
 
-        if left_mouse:
-            field[row][col] = True
+        try:
+            cell = field[row][col]
 
-        elif right_mouse:
-            field[row][col] = False
+            if left_mouse:
+                if not cell:
+                    field[row][col] = True
+                    count_living_cells += 1
+
+            elif right_mouse:
+                if cell:
+                    field[row][col] = False
+                    count_living_cells -= 1
+
+        except IndexError:
+            pass
 
         draw()
 
         last_row = row
         last_col = col
+
+        update_window_title()
 
 
 def mouse_event(button, state, x, y):
