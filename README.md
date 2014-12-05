@@ -2,6 +2,7 @@ life
 ===========
 
 EN: Simple implementation of the game "Life 1970".
+
 Controls:
  * Keyboard:
      * Key Space: stop / start the timer
@@ -13,7 +14,10 @@ Controls:
      * Right button: clear the cell
 
 
+
+
 RU: Простая реализация игры "Жизнь 1970".
+
 Управление:
  * Клавиатура:
      * Клавиша пробел: остановка / запуск таймера
