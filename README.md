@@ -26,7 +26,7 @@ life
      * Правая кнопка: очистить клетку
 
 
-Screenshots:
+##### Screenshots:
 
 ![](https://raw.githubusercontent.com/gil9red/life/master/screenshot.png)
 
