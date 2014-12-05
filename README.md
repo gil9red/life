@@ -1,9 +1,8 @@
 life
 ===========
 
-EN: Simple implementation of the game "Life 1970".
-
-Controls:
+#### EN: Simple implementation of the game "Life 1970".
+##### Controls:
  * Keyboard:
      * Key Space: stop / start the timer
      * Key Enter: step by step transition to the next generation ()
@@ -15,10 +14,8 @@ Controls:
 
 
 
-
-RU: Простая реализация игры "Жизнь 1970".
-
-Управление:
+#### RU: Простая реализация игры "Жизнь 1970".
+##### Управление:
  * Клавиатура:
      * Клавиша пробел: остановка / запуск таймера
      * Клавиша enter: пошаговый переход к следующему поколению (it is possible only during a pause)
