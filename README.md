@@ -26,8 +26,10 @@ life
      * Правая кнопка: очистить клетку
 
 
-##### Problems:
+##### Problems and Solutions:
 http://stackoverflow.com/questions/27357498
+
+http://stackoverflow.com/a/29285431/5909792
 
 
 ##### Screenshots:
