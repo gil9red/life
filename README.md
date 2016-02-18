@@ -5,7 +5,7 @@ life
 ##### Controls:
  * Keyboard:
      * Key Space: stop / start the timer
-     * Key Enter: step by step transition to the next generation ()
+     * Key Enter: step by step transition to the next generation (it is possible only during a pause)
      * Key R: new game and randomly generation of a field
      * Key N: new game and cleansing field
  * Mouse:
@@ -18,7 +18,7 @@ life
 ##### Управление:
  * Клавиатура:
      * Клавиша пробел: остановка / запуск таймера
-     * Клавиша enter: пошаговый переход к следующему поколению (it is possible only during a pause)
+     * Клавиша enter: пошаговый переход к следующему поколению (это возможно во время паузы)
      * Клавиша R: новая игра и рандомная генерация поля
      * Клавиша N: новая игра и очищение поля.
  * Мышка:
