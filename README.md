@@ -34,10 +34,10 @@ http://stackoverflow.com/a/29285431/5909792
 
 ##### Screenshots:
 
-![](https://raw.githubusercontent.com/gil9red/life/master/screenshot.png)
+![](screenshot.png)
 
 
-![](https://raw.githubusercontent.com/gil9red/life/master/screenshot_2.png)
+![](screenshot_2.png)
 
 
-![](https://raw.githubusercontent.com/gil9red/life/master/screenshot_3.png)
+![](screenshot_3.png)
